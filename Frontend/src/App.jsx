@@ -1,21 +1,31 @@
-// src/App.js with Router
+// src/App.jsx with Protected Routes
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import Auth from "./pages/Auth";
-import Home from "./pages/Home"; // You'd need to create this component
+import Home from "./pages/Home";
+import ProtectedRoute from "./components/auth/ProtectedRoute";
 
 function App() {
-  // Simple auth check - in a real app, you'd use a more robust solution
-  const isAuthenticated = true; // Replace with actual auth check
-  
   return (
     <Routes>
       <Route path="/" element={<Auth />} />
       <Route 
         path="/home" 
-        element={isAuthenticated ? <Home /> : <Navigate to="/" />} 
+        element={
+          <ProtectedRoute>
+            <Home />
+          </ProtectedRoute>
+        } 
       />
-      {/* Add other routes as needed */}
+      {/* Redirect any unknown routes to Home if authenticated, or Login if not */}
+      <Route 
+        path="*" 
+        element={
+          localStorage.getItem('token') ? 
+            <Navigate to="/home" /> : 
+            <Navigate to="/" />
+        } 
+      />
     </Routes>
   );
 }

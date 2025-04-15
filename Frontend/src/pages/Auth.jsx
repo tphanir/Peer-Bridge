@@ -1,11 +1,12 @@
-// src/pages/Auth.jsx
+// src/pages/Auth.jsx - Fixed Version
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AuthLayout from "../components/layout/AuthLayout";
 import AuthForm from "../components/auth/AuthForm";
 import axios from "axios";
 
-const API_URL = "http://localhost:4000/PeerBridge/users"; // Ensure CORS is handled on backend
+// Updated API URL to match backend expectations
+const API_URL = "http://localhost:4000/PeerBridge/users";
 
 const Auth = () => {
   const navigate = useNavigate();
@@ -77,7 +78,7 @@ const Auth = () => {
     try {
       if (isLogin) {
         // Login request
-        const response = await axios.post(API_URL + "/login", {
+        const response = await axios.post(`${API_URL}/login`, {
           email,
           password
         });
@@ -93,9 +94,9 @@ const Auth = () => {
           throw new Error("Invalid response format");
         }
       } else {
-        // Register request
-        const response = await axios.post(API_URL + '/signup', {
-          studentId,
+        // Register request - fixed parameter names to match backend
+        const response = await axios.post(`${API_URL}/signup`, {
+          studentid: studentId, // Changed from studentId to studentid
           name,
           email,
           password,
@@ -111,7 +112,6 @@ const Auth = () => {
             studentid: studentId,
             name: name,
             email: email,
-            password: password,
             year: year
           };
           localStorage.setItem("user", JSON.stringify(userData));

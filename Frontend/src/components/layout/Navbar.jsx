@@ -34,8 +34,17 @@ const Navbar = ({
 }) => {
   const navigate = useNavigate();
 
-  const handleLogout = async () => {
-  }
+  const handleLogout = () => {
+    // Clear authentication data from localStorage
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    
+    // Redirect to login page
+    navigate('/');
+    
+    // Optional: Show a success message
+    console.log("Successfully logged out");
+  };
 
   return (
     <AppBar 
@@ -108,6 +117,7 @@ const Navbar = ({
               color="inherit" 
               onClick={handleLogout}
               sx={{ ml: 2 }}
+              title="Logout"
             >
               <LogoutIcon />
             </IconButton>
