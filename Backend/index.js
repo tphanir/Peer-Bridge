@@ -8,6 +8,9 @@ const db = require('./db'); // Import database connection
 const jwt = require('jsonwebtoken');
 const { promisify } = require('util');
 
+
+const listEndpoints = require('express-list-endpoints');
+
 const userRoutes = require('./Routes/userRoutes'); // HTTP
 const chatRoutes = require('./Routes/chatRoutes'); // HTTP
 const skillRoutes = require('./Routes/skillRoutes');
@@ -24,12 +27,13 @@ app.use(bodyParser.json());
 app.use(morgan('dev'));
 
 // HTTP Routes (Users will remain RESTful)
-const API_PREFIX = '/PeerBridge/v1';
+const API_PREFIX = '/PeerBridge';
 app.use(`${API_PREFIX}/users`, userRoutes);
 app.use(`${API_PREFIX}/course`, courseRoutes);
 app.use(`${API_PREFIX}/experience`, experienceRoutes);
 app.use(`${API_PREFIX}/skills`, skillRoutes);
 app.use(`${API_PREFIX}/chat`, chatRoutes);
+
 
 // Apollo Server for GraphQL (Resources, Experiences, Courses)
 const server = new ApolloServer({
@@ -69,3 +73,4 @@ startServer().then(() => {
     console.log(`🔗 GraphQL API available at http://localhost:${PORT}/graphql`);
   });
 });
+
