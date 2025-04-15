@@ -1,5 +1,5 @@
 const express = require('express');
-const experienceController = require('../Controllers/experienceController');
+const experienceController = require('../controllers/experienceController');
 
 const experienceRoutes = express.Router();
 
