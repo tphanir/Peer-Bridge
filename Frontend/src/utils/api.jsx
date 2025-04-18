@@ -31,6 +31,41 @@ API.interceptors.response.use(
   }
 );
 
+// Course Review services
+export const CourseReviewService = {
+  // Get all reviews with optional filtering and sorting
+  getAll: (params = {}) => {
+    const queryParams = new URLSearchParams();
+    if (params.search) queryParams.append('search', params.search);
+    if (params.sort_by) queryParams.append('sort_by', params.sort_by);
+    if (params.sort_order) queryParams.append('sort_order', params.sort_order);
+    if (params.page) queryParams.append('page', params.page);
+    if (params.limit) queryParams.append('limit', params.limit);
+    
+    return API.get(`/PeerBridge/course/reviews?${queryParams.toString()}`);
+  },
+  
+  // Get reviews for a specific course
+  getByCourse: (courseCode) => API.get(`/PeerBridge/course/reviews/course?course_code=${courseCode}`),
+  
+  // Add a new review
+  add: (reviewData) => API.post('/PeerBridge/course/course', reviewData),
+  
+  // Toggle like on a review
+  toggleLike: (reviewId) => {
+    const userData = JSON.parse(localStorage.getItem('user') || '{}');
+    return API.post(`/PeerBridge/course/reviews/${reviewId}/toggle-like`, {
+      studentid: userData.studentid
+    });
+  },
+  
+  // Check if the current user has liked a review
+  checkLiked: (reviewId) => {
+    const userData = JSON.parse(localStorage.getItem('user') || '{}');
+    return API.get(`/PeerBridge/course/reviews/${reviewId}/like-status?studentid=${userData.studentid}`);
+  }
+};
+
 // Authentication services
 export const AuthService = {
   // Register a new user
@@ -66,118 +101,6 @@ export const AuthService = {
   getCurrentUser: () => {
     const userData = localStorage.getItem('user');
     return userData ? JSON.parse(userData) : null;
-  }
-};
-
-// Course services
-export const CourseService = {
-  // Get all courses
-  getAll: () => API.get('/PeerBridge/course'),
-  
-  // Get course by ID
-  getById: (id) => API.get(`/PeerBridge/course/${id}`),
-  
-  // Create new course
-  create: (courseData) => API.post('/PeerBridge/course', courseData),
-  
-  // Update course
-  update: (id, courseData) => API.put(`/PeerBridge/course/${id}`, courseData),
-  
-  // Delete course
-  delete: (id) => API.delete(`/PeerBridge/course/${id}`),
-
-  // Get course reviews
-  getReviews: (courseId) => API.get(`/PeerBridge/course/${courseId}/reviews`),
-  
-  // Add review to course
-  addReview: (courseId, reviewData) => API.post(`/PeerBridge/course/${courseId}/reviews`, reviewData)
-};
-
-// Experience services
-export const ExperienceService = {
-  // Get all experiences
-  getAll: () => API.get('/PeerBridge/experience'),
-  
-  // Get experience by ID
-  getById: (id) => API.get(`/PeerBridge/experience/${id}`),
-  
-  // Create new experience
-  create: (experienceData) => API.post('/PeerBridge/experience', experienceData),
-  
-  // Update experience
-  update: (id, experienceData) => API.put(`/PeerBridge/experience/${id}`, experienceData),
-  
-  // Delete experience
-  delete: (id) => API.delete(`/PeerBridge/experience/${id}`),
-
-  // Get user's experiences
-  getUserExperiences: (userId) => API.get(`/PeerBridge/experience/user/${userId}`)
-};
-
-// Skills services
-export const SkillService = {
-  // Get all skills
-  getAll: () => API.get('/PeerBridge/skills'),
-  
-  // Get skill by ID
-  getById: (id) => API.get(`/PeerBridge/skills/${id}`),
-  
-  // Create new skill
-  create: (skillData) => API.post('/PeerBridge/skills', skillData),
-  
-  // Update skill
-  update: (id, skillData) => API.put(`/PeerBridge/skills/${id}`, skillData),
-  
-  // Delete skill
-  delete: (id) => API.delete(`/PeerBridge/skills/${id}`),
-
-  // Get skills by category
-  getByCategory: (category) => API.get(`/PeerBridge/skills/category/${category}`)
-};
-
-// Chat services
-export const ChatService = {
-  // Get all messages
-  getMessages: () => API.get('/PeerBridge/chat'),
-  
-  // Get conversation by ID
-  getConversation: (conversationId) => API.get(`/PeerBridge/chat/${conversationId}`),
-  
-  // Send a message
-  sendMessage: (messageData) => API.post('/PeerBridge/chat', messageData),
-  
-  // Get user's conversations
-  getUserConversations: (userId) => API.get(`/PeerBridge/chat/user/${userId}`)
-};
-
-// GraphQL client for more complex data requirements
-export const graphqlRequest = async (query, variables = {}) => {
-  try {
-    const token = localStorage.getItem('token');
-    const headers = token ? { Authorization: `Bearer ${token}` } : {};
-    
-    const response = await axios.post(
-      `${BASE_URL}/graphql`,
-      {
-        query,
-        variables
-      },
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          ...headers
-        }
-      }
-    );
-    
-    if (response.data.errors) {
-      throw new Error(response.data.errors[0].message);
-    }
-    
-    return response.data.data;
-  } catch (error) {
-    console.error('GraphQL Error:', error);
-    throw error;
   }
 };
 

@@ -1,9 +1,10 @@
-// src/pages/Home.jsx - Enhanced Horizontal Layout
+// src/pages/Home.jsx - Enhanced with CourseReviewsSection
 import React, { useState } from "react";
 import { Box, Container, Paper, Typography, Divider, Grid, useMediaQuery, useTheme } from "@mui/material";
 import Navbar from "../components/layout/Navbar";
 import MobileDrawer from "../components/layout/MobileDrawer";
 import { SECTIONS } from "../utils/constants";
+import CourseReviewsSection from "../components/courseReviews/CourseReviewsSection";
 import {
   MenuBook as CourseReviewsIcon,
   EmojiEvents as ExperiencesIcon,
@@ -40,6 +41,61 @@ const Home = () => {
     ...section,
     IconComponent: iconComponents[section.icon]
   }));
+
+  // Render the content based on active section
+  const renderSectionContent = () => {
+    switch (activeSection) {
+      case "courseReviews":
+        return <CourseReviewsSection />;
+      case "experiences":
+        return (
+          <Typography
+            variant="body1"
+            sx={{
+              fontFamily: "'Libre Franklin', sans-serif",
+              fontSize: "16px",
+              color: "#34495e",
+              lineHeight: 1.6,
+            }}
+          >
+            This is the content area for the experiences section.
+            In a real application, this would display relevant experience sharing features.
+          </Typography>
+        );
+      case "courseResources":
+        return (
+          <Typography
+            variant="body1"
+            sx={{
+              fontFamily: "'Libre Franklin', sans-serif",
+              fontSize: "16px",
+              color: "#34495e",
+              lineHeight: 1.6,
+            }}
+          >
+            This is the content area for the course resources section.
+            In a real application, this would display available course materials and resources.
+          </Typography>
+        );
+      case "chat":
+        return (
+          <Typography
+            variant="body1"
+            sx={{
+              fontFamily: "'Libre Franklin', sans-serif",
+              fontSize: "16px",
+              color: "#34495e",
+              lineHeight: 1.6,
+            }}
+          >
+            This is the content area for the chat section.
+            In a real application, this would display a real-time messaging interface.
+          </Typography>
+        );
+      default:
+        return null;
+    }
+  };
 
   return (
     <Box sx={{ display: "flex", minHeight: "100vh", bgcolor: "#f8f8f8" }}>
@@ -189,18 +245,7 @@ const Home = () => {
             
             <Divider sx={{ mb: 3 }} />
             
-            <Typography
-              variant="body1"
-              sx={{
-                fontFamily: "'Libre Franklin', sans-serif",
-                fontSize: "16px",
-                color: "#34495e",
-                lineHeight: 1.6,
-              }}
-            >
-              This is the content area for the {sections.find(s => s.id === activeSection)?.title.toLowerCase()} section.
-              In a real application, this would display the relevant data and interactive elements for this section.
-            </Typography>
+            {renderSectionContent()}
           </Paper>
         </Container>
       </Box>
