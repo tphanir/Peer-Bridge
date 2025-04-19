@@ -1,4 +1,4 @@
-// src/utils/api.js
+// src/utils/api.js - Updated with ResourceService
 import axios from 'axios';
 
 // Base URL from your Express server
@@ -63,6 +63,76 @@ export const CourseReviewService = {
   checkLiked: (reviewId) => {
     const userData = JSON.parse(localStorage.getItem('user') || '{}');
     return API.get(`/PeerBridge/course/reviews/${reviewId}/like-status?studentid=${userData.studentid}`);
+  }
+};
+
+// Resource services
+export const ResourceService = {
+  // Get all resources with optional filtering
+  getAll: (params = {}) => {
+    const queryParams = new URLSearchParams();
+    if (params.search) queryParams.append('search', params.search);
+    if (params.category) queryParams.append('category', params.category);
+    if (params.page) queryParams.append('page', params.page);
+    if (params.limit) queryParams.append('limit', params.limit);
+    
+    // Using either REST API or GraphQL based on what's implemented in the backend
+    return API.get(`/PeerBridge/skills?${queryParams.toString()}`);
+  },
+  
+  // Get resources by skill name
+  getBySkill: (skillName) => API.get(`/PeerBridge/skills/${encodeURIComponent(skillName)}`),
+  
+  // Add a new resource
+  add: (resourceData) => {
+    // Using either REST API
+    return API.post('/PeerBridge/skills/add', resourceData);
+    
+    // Alternatively, this could use GraphQL if that's how the backend is implemented
+    // GraphQL implementation would be:
+    /*
+    return API.post('/graphql', {
+      query: `
+        mutation AddResource($input: ResourceInput!) {
+          addSkill(
+            skill_name: $input.skill_name, 
+            description: $input.description, 
+            category: $input.category, 
+            resources: $input.resources, 
+            tags: $input.tags
+          ) {
+            resource_id
+            skill_name
+            description
+            category
+            resources
+            tags
+            created_at
+            updated_at
+          }
+        }
+      `,
+      variables: {
+        input: resourceData
+      }
+    });
+    */
+  },
+  
+  // Update an existing resource (add resources or tags)
+  update: (skillName, additionalData) => 
+    API.put('/PeerBridge/skills/update', {
+      skill_name: skillName,
+      additional_resources: additionalData.resources,
+      additional_tags: additionalData.tags
+    }),
+    
+  // Bookmark a resource (assuming this functionality will be added later)
+  toggleBookmark: (resourceId) => {
+    const userData = JSON.parse(localStorage.getItem('user') || '{}');
+    return API.post(`/PeerBridge/skills/${resourceId}/bookmark`, {
+      studentid: userData.studentid
+    });
   }
 };
 

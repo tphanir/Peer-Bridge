@@ -1,10 +1,11 @@
-// src/pages/Home.jsx - Enhanced with CourseReviewsSection
+// src/pages/Home.jsx - Updated with CourseResourcesSection
 import React, { useState } from "react";
 import { Box, Container, Paper, Typography, Divider, Grid, useMediaQuery, useTheme } from "@mui/material";
 import Navbar from "../components/layout/Navbar";
 import MobileDrawer from "../components/layout/MobileDrawer";
 import { SECTIONS } from "../utils/constants";
 import CourseReviewsSection from "../components/courseReviews/CourseReviewsSection";
+import CourseResourcesSection from "../components/courseResources/CourseResourcesSection";
 import {
   MenuBook as CourseReviewsIcon,
   EmojiEvents as ExperiencesIcon,
@@ -63,20 +64,7 @@ const Home = () => {
           </Typography>
         );
       case "courseResources":
-        return (
-          <Typography
-            variant="body1"
-            sx={{
-              fontFamily: "'Libre Franklin', sans-serif",
-              fontSize: "16px",
-              color: "#34495e",
-              lineHeight: 1.6,
-            }}
-          >
-            This is the content area for the course resources section.
-            In a real application, this would display available course materials and resources.
-          </Typography>
-        );
+        return <CourseResourcesSection />;
       case "chat":
         return (
           <Typography
